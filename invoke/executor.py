@@ -125,7 +125,8 @@ class Executor(object):
             # an appropriate one; e.g. subclasses might use extra data from
             # being parameterized), handing in this config for use there.
             context = call.make_context(config)
-            args = (context,) + args
+            if not call.task.taskset:
+                args = (context,) + args
             result = call.task(*args, **call.kwargs)
             if autoprint:
                 print(result)

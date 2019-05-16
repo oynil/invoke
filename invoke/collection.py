@@ -1,5 +1,6 @@
 import copy
 import types
+import inspect
 
 from .util import six, Lexicon, helpline
 
@@ -227,6 +228,7 @@ class Collection(object):
                 return ret
         # Failing that, make our own collection from the module's tasks.
         tasks = filter(lambda x: isinstance(x, Task), vars(module).values())
+        
         # Again, explicit name wins over implicit one from module path
         collection = instantiate()
         for task in tasks:
@@ -234,7 +236,16 @@ class Collection(object):
         if config:
             collection.configure(config)
         return collection
-
+    
+    @classmethod
+    def from_class(cls, klass):
+        tasks = [(name, mem) for name, mem in inspect.getmembers(klass) if isinstance(mem, Task)]
+        collection = cls()
+        for name, task in tasks:
+            task.taskset = klass
+            collection.add_task(task)
+        return collection
+    
     def add_task(self, task, name=None, aliases=None, default=None):
         """
         Add `.Task` ``task`` to this collection.
