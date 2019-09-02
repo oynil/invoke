@@ -26,16 +26,8 @@ class Taskset(object):
 class CliTaskset(Taskset):
     @task
     def which_user(self):
-        #self.run("whoami")
         self.context.update_config(user="bar")
-        #self.run("whoami")
         with self.context.update_config(user="root"):
-            self.run("whoami")
-        with self.context.update_config(user="bar"):
-            self.run("whoami")
-        with self.context.update_config(user="root"):
-            self.run("whoami")
-        with self.context.update_config(user="bar"):
             self.run("whoami")
 
 
